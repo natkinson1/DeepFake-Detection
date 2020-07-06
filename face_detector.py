@@ -10,8 +10,8 @@ mtcnn = MTCNN(keep_all=True, device=device)
 def face_cropper(img_array):
     
     '''Crops an image to only have the face.'''
-    face_array = []
     
+    face_array = []
     
     boxes, probs = mtcnn.detect(img_array)
     
@@ -27,8 +27,11 @@ def face_cropper(img_array):
         width = [i for i in range(max(0, width_mid - 112), min(1920, width_mid + 112))]
         height = [i for i in range(max(0, height_mid - 112), min(1080, height_mid + 112))]
         
-        face_array.append(Image.fromarray(img_array[:,width][height]))
-        #face_array.append(img_array[:,width][height])
+            
+        try:
+            face_array.append(Image.fromarray(img_array[:,width][height]))
+        except ValueError:
+            Image.fromarray(img_array)
         
     return face_array[0]
 
