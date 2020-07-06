@@ -10,6 +10,9 @@ mtcnn = MTCNN(keep_all=True, device=device)
 def face_cropper(img_array):
     
     '''Crops an image to only have the face.'''
+
+    x, y, _ = img_array.shape
+
     
     face_array = []
     
@@ -24,29 +27,32 @@ def face_cropper(img_array):
         width_mid = int((box[2] + box[0]) / 2)
         height_mid = int((box[3] + box[1]) / 2)
         
-        width = [i for i in range(max(0, width_mid - 112), min(1920, width_mid + 112))]
-        height = [i for i in range(max(0, height_mid - 112), min(1080, height_mid + 112))]
+        width = [i for i in range(max(0, width_mid - 112), min(y, width_mid + 112))]
+        height = [i for i in range(max(0, height_mid - 112), min(x, height_mid + 112))]
         
             
         try:
             face_array.append(Image.fromarray(img_array[:,width][height]))
         except ValueError:
-            Image.fromarray(img_array)
-        
+            Image.fromarray(img_array)   
     return face_array[0]
 
 def random_frame_selector(video_source):
     
-    video = cv2.VideoCapture(video_source)
-
-    video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    random_frame = np.random.randint(0, video_length)
-
-    video.set(1, random_frame)
-
-    _, frame = video.read()
+    frame = None
     
+    while frame is None:
+    
+        video = cv2.VideoCapture(video_source)
+
+        video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        random_frame = np.random.randint(0, video_length)
+
+        video.set(1, random_frame)
+
+        _, frame = video.read()
+        
     return frame
     
 
