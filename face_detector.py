@@ -30,11 +30,7 @@ def face_cropper(img_array):
         width = [i for i in range(max(0, width_mid - 112), min(y, width_mid + 112))]
         height = [i for i in range(max(0, height_mid - 112), min(x, height_mid + 112))]
 
-
-        try:
-            face_array.append(Image.fromarray(img_array[:,width][height]))
-        except ValueError:
-            Image.fromarray(img_array)
+    face_array.append(Image.fromarray(img_array[:,width][height]))
             
     return face_array[0]
 
